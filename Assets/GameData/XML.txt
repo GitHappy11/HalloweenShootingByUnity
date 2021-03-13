@@ -1,0 +1,4 @@
+<save name="saveFile1">
+  <shootNum>16</shootNum>
+  <score>1</score>
+</save>

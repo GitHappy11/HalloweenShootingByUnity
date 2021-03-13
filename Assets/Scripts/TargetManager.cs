@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TargetManager : MonoBehaviour
 {
     public GameObject[] monsters;
     private GameObject activeMonster;
+    public Image imgPanel;
+    public SaveType saveType;
 
 
     private void Start()
@@ -26,8 +29,40 @@ public class TargetManager : MonoBehaviour
       
     }
 
-    private void Update()
+    public void ClickNewGameBtn()
     {
-        
+        foreach (GameObject monster in monsters)
+        {
+            monster.SetActive(false);
+            LocalData.shootNum = 0;
+            LocalData.score = 0;
+            imgPanel.gameObject.SetActive(false);
+        }
     }
+
+    public void ClickContinueGameBtn()
+    {
+        imgPanel.gameObject.SetActive(false);
+    }
+
+    public void ClickExit()
+    {
+        Application.Quit();
+    }
+
+    public void ClickSaveBtn()
+    {
+        Save.Instance.SavaGame(saveType);
+
+    }
+    public void ClickLoadBtn()
+    {
+        Save.Instance.LoadGame(saveType);
+        imgPanel.gameObject.SetActive(false);
+    }
+   
+
+
+
+
 }

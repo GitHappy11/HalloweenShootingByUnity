@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GunManager : MonoBehaviour
 {
@@ -17,21 +18,30 @@ public class GunManager : MonoBehaviour
     public GameObject bulletPrefab;
     public Transform fireTrans;
 
+    public Text txtShootNum;
+    public Text txtScore;
+
     private void Update()
     {
-        shootTimer += Time.deltaTime;
-        if (shootTimer>=shootTime)
-        {
-            //射击
-            if (Input.GetMouseButtonDown(0))
-            {
-                GameObject bulletCurrent = Instantiate(bulletPrefab, fireTrans.position, Quaternion.identity);
-                bulletCurrent.GetComponent<Rigidbody>().AddForce(transform.forward * 2000);
-                gameObject.GetComponent<Animation>().Play();
-                shootTimer = 0;
-            }
-        }
 
+        if (GameManager.isPaused==false)
+        {
+            MoveMouse();
+            Shoot();
+            RefreshUI();
+        }
+        
+    }
+
+
+    private void RefreshUI()
+    {
+        txtShootNum.text = "射击数：" + LocalData.shootNum;
+        txtScore.text = "得分：" + LocalData.score;
+    }
+
+    private void MoveMouse()
+    {
         //鼠标跟屏幕比例
         float xPosPrecent = Input.mousePosition.x / Screen.width;
         float yPosPrecent = Input.mousePosition.y / Screen.height;
@@ -39,8 +49,27 @@ public class GunManager : MonoBehaviour
         float xAngle = -Mathf.Clamp(yPosPrecent * maxXRotation, minXRotation, maxXRotation) + 15;
         float yAngle = Mathf.Clamp(xPosPrecent * maxYRotation, minYRotation, maxYRotation) - 60;
 
-        transform.eulerAngles = new Vector3(xAngle, yAngle-180, 0);
+        transform.eulerAngles = new Vector3(xAngle, yAngle - 180, 0);
+
+        RefreshUI();
     }
 
+    private void Shoot()
+    {
+        shootTimer += Time.deltaTime;
+        if (shootTimer >= shootTime)
+        {
+            //射击
+            if (Input.GetMouseButtonDown(0))
+            {
+                GameObject bulletCurrent = Instantiate(bulletPrefab, fireTrans.position, Quaternion.identity);
+                bulletCurrent.GetComponent<Rigidbody>().AddForce(transform.forward * 2000);
+                gameObject.GetComponent<Animation>().Play();
+                gameObject.GetComponent<AudioSource>().Play();
+                LocalData.shootNum += 1;
+                shootTimer = 0;
+            }
+        }
+    }
 
 }

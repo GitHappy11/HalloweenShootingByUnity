@@ -9,6 +9,7 @@ public class MonsterManager : MonoBehaviour
         if (collision.collider.tag=="Bullet")
         {
             Destroy(collision.gameObject);
+            LocalData.score += 1;
             gameObject.SetActive(false);
         }
     }
